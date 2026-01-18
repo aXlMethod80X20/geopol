@@ -1,7 +1,9 @@
 const Anthropic = require('@anthropic-ai/sdk');
 
-// Initialize Anthropic client
-const anthropic = new Anthropic();
+// Initialize Anthropic client with explicit API key
+const anthropic = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY
+});
 
 // Agent system prompts
 const agentPrompts = {
