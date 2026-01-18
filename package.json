@@ -1,0 +1,14 @@
+{
+  "name": "multi-agent-research-system",
+  "version": "1.0.0",
+  "description": "A multi-agent research system using Claude AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "dotenv": "^17.2.3"
+  }
+}

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Research System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .input-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .agents-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .agent-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .agent-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .agent-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        
+        .agent-1 .agent-icon { background: #4CAF50; }
+        .agent-2 .agent-icon { background: #2196F3; }
+        .agent-3 .agent-icon { background: #FF9800; }
+        
+        .agent-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .agent-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-idle { background: #e0e0e0; color: #666; }
+        .status-working { background: #FFF3CD; color: #856404; }
+        .status-complete { background: #D4EDDA; color: #155724; }
+        
+        .agent-content {
+            color: #666;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+        
+        .result-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .result-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .result-content {
+            color: #555;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Multi-Agent Research System</h1>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label>What would you like to research?</label>
+                <input type="text" id="topic" placeholder="e.g., Latest developments in renewable energy">
+            </div>
+            <button id="startBtn" onclick="startResearch()">Start Research</button>
+        </div>
+        
+        <div class="agents-container">
+            <div class="agent-card agent-1">
+                <div class="agent-header">
+                    <div class="agent-icon">🔍</div>
+                    <div>
+                        <div class="agent-title">Agent 1: Researcher</div>
+                        <span class="agent-status status-idle" id="status1">Idle</span>
+                    </div>
+                </div>
+                <div class="agent-content" id="content1">
+                    Waiting to search the web for information...
+                </div>
+            </div>
+            
+            <div class="agent-card agent-2">
+                <div class="agent-header">
+                    <div class="agent-icon">🧠</div>
+                    <div>
+                        <div class="agent-title">Agent 2: Analyzer</div>
+                        <span class="agent-status status-idle" id="status2">Idle</span>
+                    </div>
+                </div>
+                <div class="agent-content" id="content2">
+                    Waiting to analyze research findings...
+                </div>
+            </div>
+            
+            <div class="agent-card agent-3">
+                <div class="agent-header">
+                    <div class="agent-icon">✍️</div>
+                    <div>
+                        <div class="agent-title">Agent 3: Writer</div>
+                        <span class="agent-status status-idle" id="status3">Idle</span>
+                    </div>
+                </div>
+                <div class="agent-content" id="content3">
+                    Waiting to write the final report...
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-section" id="resultSection" style="display: none;">
+            <h2>📄 Final Research Report</h2>
+            <div class="result-content" id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateAgent(agentNum, status, content) {
+            const statusEl = document.getElementById(`status${agentNum}`);
+            const contentEl = document.getElementById(`content${agentNum}`);
+            
+            statusEl.className = 'agent-status status-' + status;
+            statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            contentEl.innerHTML = content;
+        }
+
+        // Simulated Claude API call with realistic responses
+        async function callClaude(messages, agentName) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+            
+            const lastMessage = messages[messages.length - 1];
+            const userContent = typeof lastMessage.content === 'string' 
+                ? lastMessage.content 
+                : lastMessage.content.map(c => c.text || '').join('');
+            
+            if (agentName === "Researcher") {
+                // Check if this is the first call (needs tool use) or second call (after tool result)
+                const hasToolResult = messages.some(m => 
+                    Array.isArray(m.content) && m.content.some(c => c.type === 'tool_result')
+                );
+                
+                if (!hasToolResult) {
+                    // First call - return tool use request
+                    return {
+                        content: [
+                            { type: "text", text: "I'll search for that information." },
+                            { 
+                                type: "tool_use", 
+                                id: "search_123",
+                                name: "web_search",
+                                input: { query: userContent.substring(0, 50) }
+                            }
+                        ]
+                    };
+                } else {
+                    // Second call - return research findings
+                    return {
+                        content: [{
+                            type: "text",
+                            text: `Based on my web search, here are the key findings:\n\n1. **Recent Development**: Major progress has been made with new innovations showing 40% improvement in efficiency compared to previous methods.\n\n2. **Market Growth**: The industry has seen significant expansion with a 25% year-over-year growth rate, driven by increased adoption and investment.\n\n3. **Expert Opinion**: Leading researchers indicate this technology is reaching a critical inflection point, with widespread implementation expected within 2-3 years.\n\n4. **Challenges**: Despite progress, there are still hurdles around scalability and cost-effectiveness that need to be addressed.\n\nSources: TechNews Daily, Industry Research Journal, Expert Analysis Report`
+                        }]
+                    };
+                }
+            }
+            
+            if (agentName === "Analyzer") {
+                return {
+                    content: [{
+                        type: "text",
+                        text: `After analyzing the research findings, here are the 3 most important insights:\n\n**Insight 1: Significant Technical Progress**\nThe 40% efficiency improvement represents a major breakthrough that could accelerate adoption timelines. This level of advancement typically signals the technology is maturing from experimental to practical application.\n\n**Insight 2: Strong Market Momentum**\nThe 25% growth rate combined with expert predictions of widespread implementation in 2-3 years indicates strong market confidence. This suggests viable commercial opportunities are emerging.\n\n**Insight 3: Implementation Barriers Remain**\nDespite optimism, scalability and cost-effectiveness challenges mean early adopters will face risks. Solutions that address these specific pain points will have competitive advantages.`
+                    }]
+                };
+            }
+            
+            if (agentName === "Writer") {
+                const topic = userContent.match(/"([^"]+)"/)?.[1] || "the topic";
+                return {
+                    content: [{
+                        type: "text",
+                        text: `Research Report: ${topic}\n\nThe field of ${topic} is experiencing a transformative period marked by substantial technological advancement and market growth. Recent developments have demonstrated a 40% improvement in efficiency, representing a significant leap forward that positions this technology at a critical inflection point. This progress has not gone unnoticed by the market, which has responded with impressive 25% year-over-year growth rates.\n\nIndustry experts and leading researchers are increasingly optimistic about the technology's trajectory, with widespread implementation projected within the next 2-3 years. This timeline reflects growing confidence in the technology's maturity and readiness for broader commercial application. The convergence of technical capability and market demand creates a compelling opportunity for organizations willing to invest in this space.\n\nHowever, challenges remain that temper unbridled enthusiasm. Scalability concerns and cost-effectiveness barriers continue to present obstacles for widespread adoption. Organizations considering implementation should carefully evaluate these factors and potentially focus on solutions that directly address these pain points. Those who can successfully navigate these challenges while capitalizing on the strong market momentum stand to gain significant competitive advantages.\n\nIn conclusion, ${topic} represents a high-potential area with substantial progress and clear market validation, balanced by real implementation challenges that require strategic consideration. The next 2-3 years will likely determine which approaches successfully bridge the gap between technical promise and practical, scalable deployment.`
+                    }]
+                };
+            }
+        }
+
+        async function startResearch() {
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) {
+                alert('Please enter a research topic!');
+                return;
+            }
+            
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'Research in Progress...';
+            
+            document.getElementById('resultSection').style.display = 'none';
+            
+            // AGENT 1: RESEARCHER
+            updateAgent(1, 'working', '<div class="loading"></div> Searching the web...');
+            
+            try {
+                const researcherMessages = [{
+                    role: "user",
+                    content: `Search the web for the latest information about: ${topic}. Provide 3-4 key findings with sources.`
+                }];
+                
+                let researcherResponse = await callClaude(researcherMessages, "Researcher");
+                
+                // Handle tool use for web search
+                if (researcherResponse.content.some(block => block.type === 'tool_use')) {
+                    const toolUse = researcherResponse.content.find(b => b.type === 'tool_use');
+                    
+                    // Simulate tool result (in real app, this would come from actual search)
+                    researcherMessages.push({
+                        role: "assistant",
+                        content: researcherResponse.content
+                    });
+                    
+                    researcherMessages.push({
+                        role: "user",
+                        content: [{
+                            type: "tool_result",
+                            tool_use_id: toolUse.id,
+                            content: JSON.stringify({
+                                results: [
+                                    {title: "Recent Development 1", snippet: "Key finding about the topic...", url: "https://example.com/1"},
+                                    {title: "Recent Development 2", snippet: "Another important discovery...", url: "https://example.com/2"},
+                                    {title: "Recent Development 3", snippet: "Latest breakthrough in the field...", url: "https://example.com/3"}
+                                ]
+                            })
+                        }]
+                    });
+                    
+                    researcherResponse = await callClaude(researcherMessages, "Researcher");
+                }
+                
+                const researchFindings = researcherResponse.content
+                    .filter(block => block.type === 'text')
+                    .map(block => block.text)
+                    .join('\n');
+                
+                updateAgent(1, 'complete', researchFindings);
+                
+                // AGENT 2: ANALYZER
+                updateAgent(2, 'working', '<div class="loading"></div> Analyzing findings...');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const analyzerResponse = await callClaude([{
+                    role: "user",
+                    content: `Analyze these research findings and extract the 3 most important insights:\n\n${researchFindings}`
+                }], "Analyzer");
+                
+                const analysis = analyzerResponse.content
+                    .filter(block => block.type === 'text')
+                    .map(block => block.text)
+                    .join('\n');
+                
+                updateAgent(2, 'complete', analysis);
+                
+                // AGENT 3: WRITER
+                updateAgent(3, 'working', '<div class="loading"></div> Writing final report...');
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const writerResponse = await callClaude([{
+                    role: "user",
+                    content: `Write a concise, professional report (3-4 paragraphs) about "${topic}" based on this analysis:\n\n${analysis}`
+                }], "Writer");
+                
+                const finalReport = writerResponse.content
+                    .filter(block => block.type === 'text')
+                    .map(block => block.text)
+                    .join('\n');
+                
+                updateAgent(3, 'complete', '✅ Report completed!');
+                
+                // Show final result
+                document.getElementById('resultSection').style.display = 'block';
+                document.getElementById('resultContent').textContent = finalReport;
+                
+                startBtn.disabled = false;
+                startBtn.textContent = 'Start New Research';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                startBtn.disabled = false;
+                startBtn.textContent = 'Start Research';
+            }
+        }
+    </script>
+</body>
+</html>

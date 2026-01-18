@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOPOLIX AI - Geopolitiikka-analytiikka</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto 24px;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* Architecture Section */
+        .architecture-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 48px;
+        }
+
+        .agent-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin: 32px 0;
+        }
+
+        .agent-node {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .agent-node:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .agent-node.researcher { border-left: 3px solid var(--primary); }
+        .agent-node.analyzer { border-left: 3px solid var(--accent); }
+        .agent-node.writer { border-left: 3px solid var(--success); }
+
+        .agent-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 12px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .agent-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .agent-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+        }
+
+        .mcp-info {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .mcp-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--accent);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--accent);
+        }
+
+        /* Hot Topics */
+        .hot-topics {
+            margin-bottom: 48px;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .topic-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .topic-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .topic-image {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .topic-card:hover .topic-image img {
+            transform: scale(1.05);
+        }
+
+        .topic-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(transparent, rgba(15, 23, 42, 0.9));
+        }
+
+        .topic-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .badge-hot { background: var(--danger); }
+        .badge-trending { background: var(--warning); }
+        .badge-breaking { background: var(--accent); }
+
+        .topic-content {
+            padding: 24px;
+        }
+
+        .topic-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .topic-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .topic-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Input Section */
+        .input-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 48px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Agent Cards */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .agent-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            border-color: var(--border);
+        }
+
+        .agent-card.agent-1 { border-top: 3px solid var(--primary); }
+        .agent-card.agent-2 { border-top: 3px solid var(--accent); }
+        .agent-card.agent-3 { border-top: 3px solid var(--success); }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .agent-1 .agent-avatar { background: rgba(59, 130, 246, 0.15); }
+        .agent-2 .agent-avatar { background: rgba(139, 92, 246, 0.15); }
+        .agent-3 .agent-avatar { background: rgba(16, 185, 129, 0.15); }
+
+        .agent-info h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .agent-1 .agent-info h3 { color: var(--primary); }
+        .agent-2 .agent-info h3 { color: var(--accent); }
+        .agent-3 .agent-info h3 { color: var(--success); }
+
+        .agent-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-idle { background: var(--bg-dark); color: var(--text-muted); }
+        .status-working { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .status-complete { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+
+        .agent-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: bounce 0.6s ease-in-out infinite;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.1s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Result Section */
+        .result-section {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 48px;
+            display: none;
+        }
+
+        .result-section.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .result-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .result-content {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.9;
+            white-space: pre-wrap;
+        }
+
+        /* Error */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 48px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tech-badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2rem; }
+            .agent-flow { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+            .topics-grid { grid-template-columns: 1fr; }
+            .agents-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">GEOPOLIX AI</h1>
+            <p class="tagline">Tekoalypohjainen geopolitiikka-analytiikka</p>
+            <p class="subtitle">Reaaliaikainen maailmanpolitiikan analyysi kolmen erikoistuneen AI-agentin avulla</p>
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                <span>MCP Live - Reaaliaikainen data</span>
+            </div>
+        </header>
+
+        <!-- Architecture -->
+        <section class="architecture-section">
+            <h2 class="section-title">Miten se toimii</h2>
+
+            <div class="agent-flow">
+                <div class="agent-node researcher">
+                    <div class="agent-icon">🔍</div>
+                    <div class="agent-name">Tutkija</div>
+                    <div class="agent-desc">Hakee reaaliaikaista tietoa verkosta</div>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="agent-node analyzer">
+                    <div class="agent-icon">🧠</div>
+                    <div class="agent-name">Analyytikko</div>
+                    <div class="agent-desc">Analysoi trendit ja vaikutukset</div>
+                </div>
+
+                <div class="flow-arrow">→</div>
+
+                <div class="agent-node writer">
+                    <div class="agent-icon">✍️</div>
+                    <div class="agent-name">Raportoija</div>
+                    <div class="agent-desc">Kirjoittaa selkeän raportin</div>
+                </div>
+            </div>
+
+            <div class="mcp-info">
+                <div class="mcp-badge">
+                    <span>🔗</span>
+                    <span>MCP Protocol</span>
+                </div>
+                <div class="mcp-badge">
+                    <span>🌐</span>
+                    <span>Brave Web Search</span>
+                </div>
+                <div class="mcp-badge">
+                    <span>🤖</span>
+                    <span>Claude AI</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hot Topics -->
+        <section class="hot-topics">
+            <h2 class="section-title">Ajankohtaiset aiheet</h2>
+
+            <div class="topics-grid">
+                <div class="topic-card" onclick="setTopic('Trump hallinnon talouslinjaukset ja vaikutukset EU:hun ja Suomeen 2025')">
+                    <div class="topic-image">
+                        <img src="/images/trump.jpg" alt="Donald Trump" loading="lazy">
+                        <span class="topic-badge badge-hot">Kuuma</span>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Trump 2.0 ja EU:n kauppasuhteet</h3>
+                        <p class="topic-desc">Miten uusi Trump-hallinto vaikuttaa eurooppalaiseen talouteen ja Suomen vientiteollisuuteen? Tullit, kauppasota ja taloudelliset jännitteet.</p>
+                        <div class="topic-meta">
+                            <span>🔥 Erittäin ajankohtainen</span>
+                            <span>USA / EU</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topic-card" onclick="setTopic('Suomalainen teknologia startup ekosysteemi AI tekoäly 2025')">
+                    <div class="topic-image">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop" alt="Technology" loading="lazy">
+                        <span class="topic-badge badge-trending">Trendi</span>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Suomen teknologiamurros</h3>
+                        <p class="topic-desc">Suomalaiset AI-startupit ja teknologiayritykset. Onko Suomi palaamassa teknologian kärkeen Nokian jälkeen?</p>
+                        <div class="topic-meta">
+                            <span>🚀 Kasvava trendi</span>
+                            <span>Suomi / Tech</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topic-card" onclick="setTopic('EU strateginen autonomia riippumattomuus Kiina USA teknologia 2025')">
+                    <div class="topic-image">
+                        <img src="/images/vonderleyen.jpg" alt="Ursula von der Leyen" loading="lazy">
+                        <span class="topic-badge badge-breaking">Tärkeä</span>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">EU:n strateginen itsenäisyys</h3>
+                        <p class="topic-desc">Euroopan pyrkimys vähentää riippuvuutta USA:sta ja Kiinasta. Mitä se tarkoittaa Suomen kaupalle ja turvallisuudelle?</p>
+                        <div class="topic-meta">
+                            <span>🌍 Globaali vaikutus</span>
+                            <span>EU / Geopolitiikka</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topic-card" onclick="setTopic('NATO Suomi turvallisuuspolitiikka Venäjä itäraja 2025')">
+                    <div class="topic-image">
+                        <img src="https://images.unsplash.com/photo-1579912437766-7896df6d3cd3?w=600&h=400&fit=crop" alt="Military" loading="lazy">
+                        <span class="topic-badge badge-hot">Kuuma</span>
+                    </div>
+                    <div class="topic-content">
+                        <h3 class="topic-title">Suomi ja NATO</h3>
+                        <p class="topic-desc">Suomen uusi rooli NATO:n jäsenenä. Itärajan turvallisuus, puolustusyhteistyö ja geopoliittinen asema.</p>
+                        <div class="topic-meta">
+                            <span>🛡️ Turvallisuus</span>
+                            <span>Suomi / NATO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Input -->
+        <section class="input-section">
+            <h2 class="section-title">Aloita analyysi</h2>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="input-group">
+                <label for="topic">Mitä geopoliittista aihetta haluat tutkia?</label>
+                <input type="text" class="input-field" id="topic" placeholder="Esim: Kiinan ja USA:n teknologiakilpailu ja vaikutukset Eurooppaan">
+            </div>
+            <button class="submit-btn" id="startBtn" onclick="startResearch()">
+                Käynnistä analyysi
+            </button>
+        </section>
+
+        <!-- Agents -->
+        <div class="agents-grid">
+            <div class="agent-card agent-1">
+                <div class="agent-header">
+                    <div class="agent-avatar">🔍</div>
+                    <div class="agent-info">
+                        <h3>Tutkija-agentti</h3>
+                        <span class="agent-status status-idle" id="status1">Odottaa</span>
+                    </div>
+                </div>
+                <div class="agent-content" id="content1">
+                    Valmiina hakemaan reaaliaikaista tietoa verkosta MCP:n kautta...
+                </div>
+            </div>
+
+            <div class="agent-card agent-2">
+                <div class="agent-header">
+                    <div class="agent-avatar">🧠</div>
+                    <div class="agent-info">
+                        <h3>Analyytikko-agentti</h3>
+                        <span class="agent-status status-idle" id="status2">Odottaa</span>
+                    </div>
+                </div>
+                <div class="agent-content" id="content2">
+                    Valmiina analysoimaan löydöksiä suomalaisesta näkökulmasta...
+                </div>
+            </div>
+
+            <div class="agent-card agent-3">
+                <div class="agent-header">
+                    <div class="agent-avatar">✍️</div>
+                    <div class="agent-info">
+                        <h3>Raportoija-agentti</h3>
+                        <span class="agent-status status-idle" id="status3">Odottaa</span>
+                    </div>
+                </div>
+                <div class="agent-content" id="content3">
+                    Valmiina kirjoittamaan selkeän raportin suomeksi...
+                </div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <section class="result-section" id="resultSection">
+            <div class="result-header">
+                <div class="result-icon">📊</div>
+                <h2 class="result-title">Analyysiraportti</h2>
+            </div>
+            <div class="result-content" id="resultContent"></div>
+        </section>
+
+        <footer>
+            <p>GEOPOLIX AI — Tekoälypohjainen geopolitiikka-analyysi</p>
+            <div class="tech-stack">
+                <span class="tech-badge">Claude Sonnet</span>
+                <span class="tech-badge">MCP Protocol</span>
+                <span class="tech-badge">Brave Search</span>
+                <span class="tech-badge">Multi-Agent</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const API_URL = '/api/agent';
+
+        function setTopic(topic) {
+            document.getElementById('topic').value = topic;
+            document.getElementById('topic').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('topic').focus();
+        }
+
+        function updateAgent(agentNum, status, content) {
+            const statusEl = document.getElementById(`status${agentNum}`);
+            const contentEl = document.getElementById(`content${agentNum}`);
+
+            const statusTexts = {
+                'idle': 'Odottaa',
+                'working': 'Työskentelee',
+                'complete': 'Valmis'
+            };
+
+            statusEl.className = 'agent-status status-' + status;
+            statusEl.textContent = statusTexts[status] || status;
+            contentEl.innerHTML = content;
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        async function callAgent(agentType, message, context = null) {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ agent: agentType, message: message, context: context })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Agenttikutsu epäonnistui');
+            }
+
+            const data = await response.json();
+            return data.result;
+        }
+
+        async function startResearch() {
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) {
+                alert('Syötä analysoitava aihe!');
+                return;
+            }
+
+            hideError();
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'Analysoidaan...';
+
+            document.getElementById('resultSection').classList.remove('visible');
+
+            updateAgent(1, 'idle', 'Valmiina hakemaan reaaliaikaista tietoa verkosta MCP:n kautta...');
+            updateAgent(2, 'idle', 'Valmiina analysoimaan löydöksiä suomalaisesta näkökulmasta...');
+            updateAgent(3, 'idle', 'Valmiina kirjoittamaan selkeän raportin suomeksi...');
+
+            try {
+                // Agent 1: Tutkija
+                updateAgent(1, 'working', '<div class="loading-dots"><span></span><span></span><span></span></div> Haetaan tietoa aiheesta: ' + topic);
+
+                const researchFindings = await callAgent(
+                    'researcher',
+                    `Tutki seuraavaa geopoliittista aihetta ja etsi ajankohtaista tietoa. Keskity faktoihin, tilastoihin ja viimeaikaisiin kehityksiin: ${topic}`
+                );
+
+                updateAgent(1, 'complete', researchFindings);
+
+                // Agent 2: Analyytikko
+                updateAgent(2, 'working', '<div class="loading-dots"><span></span><span></span><span></span></div> Analysoidaan löydöksiä...');
+
+                const analysis = await callAgent(
+                    'analyzer',
+                    `Analysoi nämä geopoliittiset löydökset suomalaisesta näkökulmasta. Tunnista 3 tärkeintä trendiä ja niiden vaikutukset Suomelle ja Euroopalle:\n\n${researchFindings}`
+                );
+
+                updateAgent(2, 'complete', analysis);
+
+                // Agent 3: Raportoija
+                updateAgent(3, 'working', '<div class="loading-dots"><span></span><span></span><span></span></div> Kirjoitetaan raporttia...');
+
+                const finalReport = await callAgent(
+                    'writer',
+                    `Kirjoita selkeä ja ammattimainen geopoliittinen analyysiraportti SUOMEKSI aiheesta "${topic}". Käytä seuraavaa analyysia pohjana. Raportin tulee olla helposti ymmärrettävä tavalliselle suomalaiselle lukijalle:\n\n${analysis}`
+                );
+
+                updateAgent(3, 'complete', '✓ Raportti valmis');
+
+                document.getElementById('resultSection').classList.add('visible');
+                document.getElementById('resultContent').textContent = finalReport;
+
+                startBtn.disabled = false;
+                startBtn.textContent = 'Aloita uusi analyysi';
+
+            } catch (error) {
+                console.error('Virhe:', error);
+                showError('Virhe: ' + error.message);
+
+                for (let i = 1; i <= 3; i++) {
+                    const statusEl = document.getElementById(`status${i}`);
+                    if (statusEl.textContent === 'Työskentelee') {
+                        updateAgent(i, 'idle', 'Virhe tapahtui');
+                    }
+                }
+
+                startBtn.disabled = false;
+                startBtn.textContent = 'Käynnistä analyysi';
+            }
+        }
+
+        document.getElementById('topic').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') startResearch();
+        });
+    </script>
+</body>
+</html>

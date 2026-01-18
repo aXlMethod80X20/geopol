@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+  <title>European Parliament - File not found</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="keywords" content="european parliament, parliament, europe" />
+  <meta name="description" content="The Internet address (url) you wanted to consult does not exist" />
+  <meta name="language" content="en" />
+  <meta name="robots" content="index, noodp, noydir, notranslate, noarchive" />
+  <meta http-equiv="refresh" content="10; url=/portal/en" />
+
+
+
+		<!-- Design du generateur -->
+		<style type="text/css">
+			@import "/website/external/css/error_style_page.css";
+		</style>
+		<!-- Importation des scripts -->
+			<!-- GENERAL - Outils necessaires aux widgets javascript -->
+			<script type="text/javascript" src="/website/common/js/htmanager.js"></script>
+			<script type="text/javascript" src="/website/common/js/managetag.js"></script>
+			<!-- GENERAL - Gestion des widgets javascript communs a tous les sites -->
+			<script type="text/javascript" src="/website/common/js/widget.js"></script>
+				<!-- jQuery -->
+	<script type="text/javascript" src="/website/common/js/jquery.min.js"></script>
+	<!-- GENERAL - Epbox -->
+	<script type="text/javascript" src="/website/common/js/epbox.js"></script>
+			<!-- SPECIFIQUE - Lancement des widgets a la fin du chargement complet de la page -->
+			<script type="text/javascript" src="/website/news/js/onload.js"></script>
+	</head>
+	<body xml:lang="en" lang="en">
+		<!-- Zone "Menu d'accessibilite"  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<div id="waimenu">
+			<div><a href="#menunavigation" title="Direct access to main navigation"><span>Access to main navigation (press 'Enter')</span></a></div>
+			<div><a href="#maincontentbox" title="Direct access to page content"><span>Access to page content (press 'Enter')</span></a></div>
+			<div><a href="#footermenusite" title="Direct access to list of other websites"><span>Access to list of other websites (press 'Enter')</span></a></div>
+		</div>
+		<!-- Zone "Menu d'accessibilite" : fin - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Zone "Entete" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<div id="header">
+			<div id="headerbox">
+				<!-- Entete - Bloc titre et logo -->
+				<div id="headerwrapper_title">
+					<div id="headertitle">
+						<span class="ep_title">
+							<img alt="" title="" src="/website/common/img/icon/header_icon_eplogo_print.png" />
+							<a class="ep_galaxy" href="/portal/en" title="Revenir au portail Europarl">European Parliament</a>
+							<span class="ep_endbox">&nbsp;</span>
+						</span>
+						<span class="ep_align">&nbsp;</span>
+					</div>
+				</div>
+
+				<!-- Entete - Bloc de promotion -->
+				<div id="headerwrapper_promo">
+					<!-- <div id="headerpromotion">Zone promotionnelle à définir</div> -->
+					<span class="ep_endbox">&nbsp;</span>
+				</div>
+				<!-- Entete - Cloture de l'entete -->
+				<span class="ep_endbox">&nbsp;</span>
+			</div>
+		</div>
+		<!-- Zone "Entete" : fin - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Zone "Corps de la page" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<div id="body" class="ep_2headmenu">
+
+			<!-- Corps de la page - Zone de contenu -->
+			<div id="maincontent">
+				<div id="maincontentbox">
+					<div class="ep_wrapper ep_1columns">
+						<!-- Corps de la page - Zone de contenu principal (colonne gauche) -->
+						<div id="mainzone">
+
+							<div id="errorbox">
+								<div class="ep_boxheader">
+									<div class="ep_block">
+										<span class="ep_title">Welcome to the European Parliament's website.</span>
+									</div>
+									<span class="ep_endbox">&nbsp;</span>
+								</div>
+								<div class="ep_boxbody">
+									<div class="ep_block">
+										<div class="ep_content">The Internet address (url) you wanted to consult does not exist <br />You will be automatically redirected to our home page.</div>
+										<span class="ep_endbox">&nbsp;</span>
+									</div>
+								</div>
+							</div>
+							<span class="ep_endbox">&nbsp;</span>
+						</div><!-- #mainzone -->
+						<!-- Corps de la page - Zone d'information complementaire (colonne droite) -->
+						<div id="contextzone">
+
+							<!-- Cloture de la zone d'information complementaire -->
+							<span class="ep_endbox">&nbsp;</span>
+						</div>
+						<!-- Corps de la page - Cloture de la zone de contenu -->
+						<span class="ep_endbox">&nbsp;</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Zone "Corps de la page" : fin - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Zone "Pied de page" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<div id="footer">
+
+		</div>
+<!-- Zone "Pied de page" : fin - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	</body>
+</html>
