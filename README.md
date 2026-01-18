@@ -67,6 +67,10 @@ User enters topic
 
 Each agent is a separate Claude API call with a specialized system prompt. The output from each agent feeds into the next one in sequence.
 
+## Known Issues
+
+**MCP does not work on Vercel deployment** - The local version uses MCP (Model Context Protocol) with Brave Search for real-time web search. However, MCP requires spawning subprocesses which doesn't work on Vercel's serverless platform. The Vercel deployment uses direct Brave Search API calls instead.
+
 ## Project Structure
 
 ```
