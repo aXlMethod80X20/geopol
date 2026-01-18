@@ -5,11 +5,49 @@ const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY
 });
 
+// Brave Search function
+async function braveSearch(query) {
+    const apiKey = process.env.BRAVE_API_KEY;
+    if (!apiKey) {
+        return null;
+    }
+
+    try {
+        const response = await fetch(`https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=5`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Subscription-Token': apiKey
+            }
+        });
+
+        if (!response.ok) {
+            console.error('Brave Search error:', response.status);
+            return null;
+        }
+
+        const data = await response.json();
+
+        // Format search results
+        if (data.web && data.web.results) {
+            return data.web.results.map(r => ({
+                title: r.title,
+                description: r.description,
+                url: r.url
+            }));
+        }
+        return null;
+    } catch (error) {
+        console.error('Brave Search error:', error);
+        return null;
+    }
+}
+
 // Agent system prompts
 const agentPrompts = {
-    researcher: `You are a Research Agent. Your job is to search for and gather information about topics.
-When given a topic, provide 3-4 key findings with specific details based on your knowledge.
-Focus on recent developments and important facts.`,
+    researcher: `You are a Research Agent with access to real-time web search results. Your job is to analyze the search results provided and gather key information about topics.
+When given search results, synthesize them into 3-4 key findings with specific details.
+Always cite your sources by mentioning where the information came from.
+Focus on the most recent and relevant information from the search results.`,
 
     analyzer: `You are an Analysis Agent. Your job is to analyze research findings and extract key insights.
 When given research findings, identify the 3 most important insights.
@@ -29,12 +67,25 @@ async function callClaudeAgent(agentType, userMessage, previousContext = null) {
     const systemPrompt = agentPrompts[agentType];
     const messages = [];
 
+    // For researcher agent, do a web search first
+    let enrichedMessage = userMessage;
+    if (agentType === 'researcher') {
+        const searchResults = await braveSearch(userMessage);
+        if (searchResults && searchResults.length > 0) {
+            const searchContext = searchResults.map((r, i) =>
+                `[${i + 1}] ${r.title}\n${r.description}\nSource: ${r.url}`
+            ).join('\n\n');
+
+            enrichedMessage = `Search query: "${userMessage}"\n\nWeb search results:\n${searchContext}\n\nPlease analyze these search results and provide key findings about: ${userMessage}`;
+        }
+    }
+
     if (previousContext) {
         messages.push({ role: 'user', content: previousContext });
         messages.push({ role: 'assistant', content: 'I understand the context. Please provide your request.' });
     }
 
-    messages.push({ role: 'user', content: userMessage });
+    messages.push({ role: 'user', content: enrichedMessage });
 
     const response = await anthropic.messages.create({
         model: 'claude-sonnet-4-20250514',
